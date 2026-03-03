@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            background: #2a5298;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .question-box {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+        }
+
+        pre {
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        label {
+            display: block;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>Online Examination</div>
+    <div class="timer">Time Left: <span id="timer"></span></div>
+</div>
+
+<form method="POST" id="examform">
+    {% for q in questions %}
+    <div class="question-box">
+        <pre><b>{{ q.id }}. {{ q.question }}</b></pre>
+
+        {% for opt in q.options %}
+            <label>
+                <input type="radio" name="{{ q.id }}" value="{{ opt }}" required>
+                {{ opt }}
+            </label>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button type="submit">Submit Exam</button>
+</form>
+
+<script>
+let timeLeft = {{ time_left }};
+
+function startTimer() {
+    let timer = setInterval(function() {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            document.getElementById("examForm").submit();
+        }
+        document.getElementById("timer").innerHTML = 
+            Math.floor(timeLeft/60) + ":" + (timeLeft%60);
+    }, 1000);
+}
+
+window.onload = startTimer;
+</script>
+
+</body>
+</html>
