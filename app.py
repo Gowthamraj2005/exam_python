@@ -34,10 +34,11 @@ def register():
         dept = request.form["dept"]
 
         # Prevent duplicate roll number
-        records = sheet.get_all_records()
-        for row in records:
-            if str(row["Roll"]) == roll:
-                return "You already attended the exam!"
+         records = sheet.get_all_records()
+
+for row in records:
+    if str(row.get("Roll", "")).strip() == roll.strip():
+        return "You already attended the exam!"
 
         session["name"] = name
         session["roll"] = roll
@@ -104,3 +105,4 @@ def submit():
     return render_template("result.html", score=score)
 if __name__ == "__main__":
     app.run(debug=True)
+
